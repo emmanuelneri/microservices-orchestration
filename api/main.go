@@ -1,13 +1,15 @@
 package main
 
 import (
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func main() {
+	log.Print("API started")
+
 	topic := "myTopic"
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
