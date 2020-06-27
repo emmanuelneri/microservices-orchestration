@@ -1,9 +1,11 @@
-FROM golang:1.14 AS api-build
-ADD . /build
-WORKDIR /build
-RUN go build -o api .
+FROM golang:1.14 as app-builder
+WORKDIR build
+ADD . .
+# TODO: improve image - RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o api
+RUN go build -o api
 
-FROM alpine:3.12
+#TODO change to alpine
+FROM golang:1.14
 WORKDIR /app
-COPY --from=api-build /build .
-CMD ["/api"]
+COPY --from=app-builder /go/build .
+ENTRYPOINT /app/api
