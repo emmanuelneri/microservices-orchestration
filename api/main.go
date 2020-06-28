@@ -21,6 +21,9 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
+		log.Print("API requested")
+
 		err = producer.Produce(&kafka.Message{
 			TopicPartition: kafka.TopicPartition{Topic: &topic},
 			Value:          body,
