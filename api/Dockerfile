@@ -6,6 +6,7 @@ RUN go build -o api
 
 #TODO change to alpine
 FROM golang:1.14
+ENV KAFKA_BOOTSTRAP_SERVERS "10.1.6.112:9092,10.1.6.114:9092,10.1.6.116:9092"
 WORKDIR /app
 COPY --from=app-builder /go/build .
 ENTRYPOINT /app/api
