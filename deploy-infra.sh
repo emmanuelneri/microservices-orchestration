@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "-------------- Kafka/Zookeeper Deploying... --------------"
-kubectl apply -f kafka-namespace.yml
+kubectl apply -f kubernetes/infra/kafka-namespace.yml
 helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
 helm repo update
 helm install -n kafka --set cp-schema-registry.enabled=false,cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false,cp-ksql-server.enabled=false --generate-name confluentinc/cp-helm-charts
