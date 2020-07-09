@@ -1,24 +1,23 @@
 # microservices-orchestration
 
-## Requirements
+## Local deployment
+
+#### Requirements
 - Docker
 - Kubernetes
 - Helm
 
-## Environment
+#### Environment
 
 1. Deploy Kafka, Zookeeper and Ingress
     - Run```./deploy-infra.sh```
     - Create topics ``../create-kafka-topics``
-2. Update Kafka Bootstrap servers
-    - Run to get address ``kubectl get ep -n kafka -l 'app=cp-kafka'``
-    - Update configuration `KAFKA_BOOTSTRAP_SERVERS` variable at ``/kubernetes/configmap/default-config.yaml``
-3. Deploy Applications
+2. Deploy Applications
     - Build images
         - Run ``/api/build.sh``
     - Run ```./deploy-apps.sh```
     
-## Execute   
+#### Execute   
 1. Execute test
     - Run ``/send.sh`` to simulate call to ``http://localhost/api``
     
