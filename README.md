@@ -12,11 +12,11 @@
     - Create topics ``../create-kafka-topics``
 2. Update Kafka Bootstrap servers
     - Run to get address ``kubectl get ep -n kafka -l 'app=cp-kafka'``
-    - Update env `KAFKA_BOOTSTRAP_SERVERS` variable at ``/api/Dockerfile``
+    - Update configuration `KAFKA_BOOTSTRAP_SERVERS` variable at ``/kubernetes/configmap/default-config.yaml``
 3. Deploy Applications
     - Build images
         - Run ``/api/build.sh``
-    - Run ```./deploy-apss.sh```
+    - Run ```./deploy-apps.sh```
     
 ## Execute   
 1. Execute test
