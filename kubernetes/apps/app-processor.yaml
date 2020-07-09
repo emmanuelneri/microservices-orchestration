@@ -17,7 +17,12 @@ spec:
         - name: api
           image: microservices-orchestration/processor
           imagePullPolicy: Never
-
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: default
+                  key: KAFKA_BOOTSTRAP_SERVERS
 ---
 apiVersion: v1
 kind: Service
@@ -27,5 +32,9 @@ metadata:
   labels:
     app: processor
 spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
   selector:
     app: processor

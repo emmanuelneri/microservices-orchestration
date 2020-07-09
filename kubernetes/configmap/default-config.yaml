@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default
+  namespace: apps
+data:
+  KAFKA_BOOTSTRAP_SERVERS: "10.1.6.112:9092,10.1.6.114:9092,10.1.6.116:9092"
