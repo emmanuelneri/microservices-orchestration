@@ -1,13 +1,19 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 )
+
+type RequestBody struct {
+	Identifier string
+	Customer   string
+}
 
 func main() {
 	bootstrapServers := getBootstrapServers()
@@ -21,17 +27,24 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(responseWriter http.ResponseWriter, request *http.Request) {
-		requestBody, bodyError := ioutil.ReadAll(request.Body)
+		var requestBodyAsJson RequestBody
+		bodyError := json.NewDecoder(request.Body).Decode(&requestBodyAsJson)
+
 		if bodyError != nil {
-			panic(bodyError)
+			http.Error(responseWriter, bodyError.Error(), http.StatusBadRequest)
+			return
 		}
 
-		log.Println("API requested: ", string(requestBody))
+		requestBodyAsBytes := new(bytes.Buffer)
+		bodyError = json.NewEncoder(requestBodyAsBytes).Encode(&requestBodyAsJson)
+
+		log.Println("API requested: ", requestBodyAsJson)
 
 		deliveryChan := make(chan kafka.Event, 10000)
 		produceError := producer.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic},
-			Value:          requestBody,
+			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+			Key:            []byte(requestBodyAsJson.Identifier),
+			Value:          requestBodyAsBytes.Bytes(),
 		}, deliveryChan)
 
 		kafkaEvent := <- deliveryChan

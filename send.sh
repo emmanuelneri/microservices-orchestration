@@ -8,8 +8,9 @@ START=$(date +%s)
 echo "send starting... ${TOTAL} registers"
 for i in $(seq 1 $TOTAL);
 do
+  identifier="${i}"
   customer="Customer ${i}"
-  json="{\"customer\": \"${customer}\"}"
+  json="{\"identifier\": \"${identifier}\",\"customer\": \"${customer}\"}"
 
   curl -s -d "${json}" -H "Content-Type: application/json" -X POST ${URL} &
 done

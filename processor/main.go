@@ -33,7 +33,7 @@ func main() {
 		eventConsumed := consumer.Poll(0)
 		switch event := eventConsumed.(type) {
 		case *kafka.Message:
-			fmt.Printf("%% Message Consumed. partition: %s: value: %s\n", event.TopicPartition.Partition, string(event.Value))
+			fmt.Printf("%% Message Consumed. partition: [%d] - key: %s - value: %s\n", event.TopicPartition.Partition, string(event.Key), string(event.Value))
 		case kafka.PartitionEOF:
 			fmt.Printf("%% Reached %v\n", event)
 		case kafka.Error:
