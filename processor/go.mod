@@ -1,4 +1,4 @@
-module apimodule
+module processormodule
 
 go 1.14
 

@@ -8,4 +8,4 @@
 -  Run application ``docker run -it -p 8080:8080 microservices-orchestration/api``
 
 ### 
-``curl -d "{\"number\": \"123\"}" -X POST http://localhost:8080``
+``curl -v -d "{\"identifier\": \"123\",\"customer\": \"Customer 1\"}" -H "Content-Type: application/json" -X POST http://localhost:8080``
