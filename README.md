@@ -25,4 +25,6 @@
 
 -  Force deploy apps ``./deploy-apps-force.sh``
 -  Describe all topics ``./describe-kafka-topics.sh``
--  Consume Kafka topic ``./consumer-kafka-topic.sh``
+-  Consume Kafka topic ``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic ApiRequested --from-beginning``
+-  List Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --list``
+-  Describe Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group processor-consumer-group``

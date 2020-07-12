@@ -14,7 +14,7 @@ func main() {
 
 	consumer, consumerError := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": bootstrapServers,
-		"group.id":          "processor-group",
+		"group.id":          "processor-consumer-group",
 		"auto.offset.reset": "earliest",
 	})
 
@@ -33,7 +33,7 @@ func main() {
 		eventConsumed := consumer.Poll(0)
 		switch event := eventConsumed.(type) {
 		case *kafka.Message:
-			fmt.Printf("%% Message on %s:\n%s\n", event.TopicPartition, string(event.Value))
+			fmt.Printf("%% Message Consumed. partition: %s: value: %s\n", event.TopicPartition.Partition, string(event.Value))
 		case kafka.PartitionEOF:
 			fmt.Printf("%% Reached %v\n", event)
 		case kafka.Error:
