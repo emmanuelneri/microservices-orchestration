@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 URL=http://localhost/api
-TOTAL=100
+TOTAL=10000
 
 START=$(date +%s)
 
