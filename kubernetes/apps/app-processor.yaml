@@ -56,6 +56,6 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: processor
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 20
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 60
