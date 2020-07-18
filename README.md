@@ -10,28 +10,28 @@
 #### Environment
 
 1. Deploy Kafka, Zookeeper and Ingress
-    - Run```./deploy-infra.sh```
-    - Create topics ``../create-kafka-topics``
+    - Run`./deploy-infra.sh`
+    - Create topics `./create-kafka-topics`
 2. Deploy Applications
     - Build images
-        - Run ``/api/build.sh``
-    - Run ```./deploy-apps.sh```
+        - Run `./api/build.sh`
+    - Run `./deploy-apps.sh`
     
 #### Execute   
-1. Execute test
-    - Run ``/send.sh`` to simulate call to ``http://localhost/api``
+1. To test
+    - Run `./send.sh` to simulate call to `http://localhost/api`
     
 #### Useful Commands     
 
--  Force deploy apps ``./deploy-apps-force.sh``
--  Describe all topics ``./describe-kafka-topics.sh``
--  Consume Kafka topic ``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic ApiRequested --from-beginning``
--  List Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --list``
--  Describe Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group processor-consumer-group``
+-  Force deploy apps `./deploy-apps-force.sh`
+-  Describe all topics `./describe-kafka-topics.sh`
+-  Consume Kafka topic `kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic ApiRequested --from-beginning`
+-  List Kafka Consumer Group`kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --list`
+-  Describe Kafka Consumer Group`kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group processor-consumer-group`
 
 #### Stop all
 
--  Destroy all resources ``./destroy-all.sh``
+-  Destroy all resources `./destroy-all.sh`
 
 
 ## Local development
@@ -48,5 +48,5 @@
 
 #### Execute   
 
-1. Execute test
-    - Execute `curl -v -d "{\"identifier\": \"123\",\"customer\": \"Customer 1\"}" -H "Content-Type: application/json" -X POST http://localhost:8080`
+1. To test
+    - Run endpoint request `curl -v -d "{\"identifier\": \"123\",\"customer\": \"Customer 1\"}" -H "Content-Type: application/json" -X POST http://localhost:8080`
