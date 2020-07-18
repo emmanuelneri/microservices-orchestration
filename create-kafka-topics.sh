@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-namespace=kafka
-kafka=confluent-oss-cp-kafka-0
-zookeeper=confluent-oss-cp-zookeeper:2181
+kafkaRest=https://kafka-hdinsight-cluster-kafkarest.azurehdinsight.net
 
-echo "-------------- Kafka Create Topics --------------"
-echo "kafka selected: ${kafka}"
-echo "zookeeper: ${zookeeper}"
-
-kubectl exec -c cp-kafka-broker -it ${kafka} -n ${namespace} -- /bin/bash /usr/bin/kafka-topics --create --topic ApiRequested --partitions 6 --replication-factor 3 --if-not-exists --zookeeper ${zookeeper}
+curl -X POST -H "Content-Type: application/vnd.api+json" -H "Accept: application/vnd.api+json" \
+          --data '{"data":{"attributes": {"topic_name": "ApiRequested", "partitions_count": 6, "replication_factor": 3}}}' \
+          "${kafkaRest}/topics"

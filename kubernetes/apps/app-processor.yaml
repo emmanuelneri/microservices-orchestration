@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: microservices-orchestration/processor
-          imagePullPolicy: Never
+          image: microservicesorchestrationregistry.azurecr.io/processor:0.0.1
           resources:
             requests:
               cpu: "0.1"

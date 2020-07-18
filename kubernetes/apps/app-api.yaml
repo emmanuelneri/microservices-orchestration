@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: microservices-orchestration/api
-          imagePullPolicy: Never
+          image: microservicesorchestrationregistry.azurecr.io/api:0.0.1
           ports:
             - containerPort: 8080
           resources:
