@@ -1,4 +1,7 @@
 # microservices-orchestration
+------------------------------------------------------
+
+![alt tag](https://github.com/emmanuelneri/microservices-orchestration/blob/master/architecture.png?style=centerme)
 
 ## Local deployment
 
