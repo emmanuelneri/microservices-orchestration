@@ -28,3 +28,25 @@
 -  Consume Kafka topic ``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic ApiRequested --from-beginning``
 -  List Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --list``
 -  Describe Kafka Consumer Group``kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group processor-consumer-group``
+
+#### Stop all
+
+-  Destroy all resources ``./destroy-all.sh``
+
+
+## Local development
+
+#### Requirements
+- Docker
+- Go
+
+#### Environment
+
+1. Start Kafka `docker-compose up`
+2. Run API application `go run main.go` (inside api directory)
+3. Run Processor application `go run main.go` (inside processor directory)
+
+#### Execute   
+
+1. Execute test
+    - Execute `curl -v -d "{\"identifier\": \"123\",\"customer\": \"Customer 1\"}" -H "Content-Type: application/json" -X POST http://localhost:8080`
