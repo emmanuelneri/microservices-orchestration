@@ -6,7 +6,10 @@ helm repo update
 
 echo "-------------- Kafka/Zookeeper Deploying... --------------"
 kubectl apply -f kubernetes/infra/kafka-namespace.yml
-helm install confluent-oss -n kafka --set cp-schema-registry.enabled=false,cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false,cp-ksql-server.enabled=false confluentinc/cp-helm-charts
+helm install confluent-oss -n kafka \
+    --set cp-control-center.enabled=false,cp-schema-registry.enabled=false,cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false,cp-ksql-server.enabled=false \
+    --set cp-kafka.prometheus.jmx.enabled=false,cp-zookeeper.prometheus.jmx.enabled=false \
+    confluentinc/cp-helm-charts
 
 echo "-------------- Metrics-server... --------------"
 kubectl apply -f kubernetes/infra/metrics-server.yaml
