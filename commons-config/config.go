@@ -1,4 +1,4 @@
-package config
+package commons_config
 
 import "os"
 
