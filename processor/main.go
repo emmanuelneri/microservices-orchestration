@@ -1,11 +1,9 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/emmanuelneri/microservices-orchestration/commonsconfig"
 	"github.com/emmanuelneri/microservices-orchestration/processor/consumer"
+	"log"
 )
 
 const (
@@ -23,13 +21,4 @@ func main() {
 	}()
 
 	select {}
-}
-
-func getBootstrapServers() string {
-	bootstrapServers := os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
-	if bootstrapServers == "" {
-		return "localhost:9092"
-	}
-
-	return bootstrapServers
 }
