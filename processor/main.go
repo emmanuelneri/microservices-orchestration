@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/emmanuelneri/microservices-orchestration/commonsconfig"
 	"github.com/emmanuelneri/microservices-orchestration/processor/consumer"
-	"log"
 )
 
 const (
