@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"log"
 	"net/http"
 	"os"
 
-	"apimodule/handler"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/emmanuelneri/microservices-orchestration/api/handler"
+	"github.com/emmanuelneri/microservices-orchestration/commonsconfig"
 )
 
 const (
@@ -14,7 +15,7 @@ const (
 )
 
 func main() {
-	bootstrapServers := getBootstrapServers()
+	bootstrapServers := commonsconfig.KafkaBootstrapServersFromEnvOrDefault()
 	log.Print("API started")
 	log.Print("Kafka bootstrapServers: ", bootstrapServers)
 

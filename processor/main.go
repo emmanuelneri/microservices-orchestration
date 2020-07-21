@@ -3,19 +3,20 @@ package main
 import (
 	"log"
 	"os"
-	"processormodule/consumer"
+
+	"github.com/emmanuelneri/microservices-orchestration/commonsconfig"
+	"github.com/emmanuelneri/microservices-orchestration/processor/consumer"
 )
 
 const (
 	consumerGroupName = "processor-consumer-group"
-	topic 			  = "ApiRequested"
+	topic             = "ApiRequested"
 )
 
 func main() {
-	bootstrapServers := getBootstrapServers()
+	bootstrapServers := commonsconfig.KafkaBootstrapServersFromEnvOrDefault()
 	log.Print("Processor started")
 	log.Print("Kafka bootstrapServers: ", bootstrapServers)
-
 
 	go func() {
 		consumer.SubscribeConsumer(bootstrapServers, consumerGroupName, topic)

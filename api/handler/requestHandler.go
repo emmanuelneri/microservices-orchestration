@@ -1,19 +1,20 @@
 package handler
 
 import (
-	"apimodule/structs"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"log"
 	"net/http"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/emmanuelneri/microservices-orchestration/api/structs"
 )
 
 // RequestHandler use to get db address for HTTP Handle method set
 type RequestHandler struct {
 	KafkaProducer *kafka.Producer
-	Topic 		  string
+	Topic         string
 }
 
 func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter, request *http.Request) {
@@ -21,7 +22,7 @@ func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter,
 	bodyError := json.NewDecoder(request.Body).Decode(&requestBodyAsJson)
 
 	if bodyError != nil {
-		http.Error(responseWriter, "invalid request. error: " + bodyError.Error(), http.StatusBadRequest)
+		http.Error(responseWriter, "invalid request. error: "+bodyError.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -30,7 +31,7 @@ func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter,
 	deliveryChan := make(chan kafka.Event, 10000)
 	produceError := produceMessage(requestBodyAsJson, requestHandler.KafkaProducer, requestHandler.Topic, deliveryChan)
 
-	if(produceError != nil) {
+	if produceError != nil {
 		http.Error(responseWriter, "internal error", http.StatusBadRequest)
 		log.Panicln("producer error", produceError)
 		return
@@ -59,7 +60,7 @@ func produceMessage(requestBodyAsJson structs.RequestBody, producer *kafka.Produ
 }
 
 func logProduceMessage(deliveryChan chan kafka.Event) {
-	kafkaEvent := <- deliveryChan
+	kafkaEvent := <-deliveryChan
 	kafkaMessage := kafkaEvent.(*kafka.Message)
 
 	if kafkaMessage.TopicPartition.Error != nil {
