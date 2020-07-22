@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/emmanuelneri/microservices-orchestration/api/handler"
@@ -15,14 +14,8 @@ const (
 )
 
 func main() {
-	bootstrapServers := commonsconfig.KafkaBootstrapServersFromEnvOrDefault()
 	log.Print("API started")
-	log.Print("Kafka bootstrapServers: ", bootstrapServers)
-
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
-	if err != nil {
-		log.Fatalf("Failed to create producer: %s\n", err)
-	}
+	producer := createKafkaProducer()
 
 	requestHandler := &handler.RequestHandler{KafkaProducer: producer, Topic: topic}
 	http.HandleFunc("/", requestHandler.Handle)
@@ -30,11 +23,14 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func getBootstrapServers() string {
-	bootstrapServers := os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
-	if bootstrapServers == "" {
-		return "localhost:9092"
+func createKafkaProducer() *kafka.Producer {
+	bootstrapServers := commonsconfig.KafkaBootstrapServersFromEnvOrDefault()
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
+	if err != nil {
+		log.Fatalf("Failed to create producer: %s\n", err)
 	}
 
-	return bootstrapServers
+	log.Print("Kafka Producer started. bootstrapServers: ", bootstrapServers)
+
+	return producer
 }
