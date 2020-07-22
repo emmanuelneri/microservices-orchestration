@@ -3,18 +3,23 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/emmanuelneri/microservices-orchestration/api/infra"
 	"github.com/emmanuelneri/microservices-orchestration/api/structs"
 )
 
 // RequestHandler use to get db address for HTTP Handle method set
 type RequestHandler struct {
-	KafkaProducer *kafka.Producer
-	Topic         string
+	kafkaProducer *kafka.Producer
+	topic         string
+	deliveryChan  chan kafka.Event
+}
+
+func CreateRequestHandler(producer *kafka.Producer, topic string) *RequestHandler {
+	return &RequestHandler{kafkaProducer: producer, topic: topic, deliveryChan: make(chan kafka.Event, 10000)}
 }
 
 func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter, request *http.Request) {
@@ -28,8 +33,7 @@ func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter,
 
 	log.Println("API requested: ", requestBodyAsJson)
 
-	deliveryChan := make(chan kafka.Event, 10000)
-	produceError := produceMessage(requestBodyAsJson, requestHandler.KafkaProducer, requestHandler.Topic, deliveryChan)
+	produceError := produce(requestBodyAsJson, requestHandler.kafkaProducer, requestHandler.topic, requestHandler.deliveryChan)
 
 	if produceError != nil {
 		http.Error(responseWriter, "internal error", http.StatusBadRequest)
@@ -40,33 +44,10 @@ func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter,
 	responseWriter.WriteHeader(http.StatusAccepted)
 }
 
-func produceMessage(requestBodyAsJson structs.RequestBody, producer *kafka.Producer, topic string, deliveryChan chan kafka.Event) error {
-	requestBodyAsBytes := new(bytes.Buffer)
-	json.NewEncoder(requestBodyAsBytes).Encode(&requestBodyAsJson)
+func produce(requestBodyAsJson structs.RequestBody, producer *kafka.Producer, topic string, deliveryChan chan kafka.Event) error {
+	key := []byte(requestBodyAsJson.Identifier)
+	value := new(bytes.Buffer)
+	json.NewEncoder(value).Encode(&requestBodyAsJson)
 
-	produceError := producer.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Key:            []byte(requestBodyAsJson.Identifier),
-		Value:          requestBodyAsBytes.Bytes(),
-	}, deliveryChan)
-
-	if produceError != nil {
-		log.Panicln("error to produce: ", produceError)
-	}
-
-	logProduceMessage(deliveryChan)
-
-	return produceError
-}
-
-func logProduceMessage(deliveryChan chan kafka.Event) {
-	kafkaEvent := <-deliveryChan
-	kafkaMessage := kafkaEvent.(*kafka.Message)
-
-	if kafkaMessage.TopicPartition.Error != nil {
-		fmt.Printf("Delivery failed: %v\n", kafkaMessage.TopicPartition.Error)
-	} else {
-		fmt.Printf("Delivered message to topic %s - partition [%d] - offset %v\n",
-			*kafkaMessage.TopicPartition.Topic, kafkaMessage.TopicPartition.Partition, kafkaMessage.TopicPartition.Offset)
-	}
+	return infra.ProduceMessage(key, value.Bytes(), producer, topic, deliveryChan)
 }
