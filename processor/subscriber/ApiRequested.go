@@ -1,22 +1,17 @@
-package consumer
+package subscriber
 
 import (
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"log"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func SubscribeConsumer(bootstrapServers string, consumerGroupName string, topic string) {
-	consumer, consumerError := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": bootstrapServers,
-		"group.id":          consumerGroupName,
-		"auto.offset.reset": "earliest",
-	})
+const (
+	topic = "ApiRequested"
+)
 
-	if consumerError != nil {
-		log.Fatal("Failed to create consumer.", consumerError)
-	}
-
+func ApiRequestedSubscriber(consumer *kafka.Consumer) {
 	subscriberError := consumer.Subscribe(topic, nil)
 
 	if subscriberError != nil {
