@@ -3,8 +3,8 @@ package infra
 import (
 	"log"
 
+	"commons/config"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 )
 
 func CreateConsumer(consumerGroupName string) *kafka.Consumer {

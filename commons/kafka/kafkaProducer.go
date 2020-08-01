@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"commons/config"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 )
 
 func CreateKafkaProducer() *kafka.Producer {
