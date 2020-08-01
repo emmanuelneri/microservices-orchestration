@@ -1,4 +1,4 @@
-module github.com/emmanuelneri/microservices-orchestration
+module github.com/emmanuelneri/microservices-orchestration/commons
 
 go 1.14
 
