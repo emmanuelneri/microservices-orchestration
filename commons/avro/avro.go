@@ -1,4 +1,4 @@
-package commons
+package avro
 
 import (
 	"github.com/linkedin/goavro/v2"
