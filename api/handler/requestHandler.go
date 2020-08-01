@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
 
+	avro "github.com/linkedin/goavro/v2"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/emmanuelneri/microservices-orchestration/api/infra"
 	"github.com/emmanuelneri/microservices-orchestration/api/structs"
@@ -15,25 +15,26 @@ import (
 type RequestHandler struct {
 	kafkaProducer *kafka.Producer
 	topic         string
+	codec 		  *avro.Codec
 	deliveryChan  chan kafka.Event
 }
 
-func CreateRequestHandler(producer *kafka.Producer, topic string) *RequestHandler {
-	return &RequestHandler{kafkaProducer: producer, topic: topic, deliveryChan: make(chan kafka.Event, 10000)}
+func CreateRequestHandler(producer *kafka.Producer, topic string, codec *avro.Codec) *RequestHandler {
+	return &RequestHandler{kafkaProducer: producer, topic: topic, codec: codec, deliveryChan: make(chan kafka.Event, 10000)}
 }
 
 func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter, request *http.Request) {
-	var requestBodyAsJson structs.RequestBody
-	bodyError := json.NewDecoder(request.Body).Decode(&requestBodyAsJson)
+	var requestBody structs.RequestBody
+	bodyError := json.NewDecoder(request.Body).Decode(&requestBody)
 
 	if bodyError != nil {
 		http.Error(responseWriter, "invalid request. error: "+bodyError.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Println("API requested: ", requestBodyAsJson)
+	log.Println("API requested: ", requestBody)
 
-	produceError := produce(requestBodyAsJson, requestHandler.kafkaProducer, requestHandler.topic, requestHandler.deliveryChan)
+	produceError := produce(requestBody, requestHandler.kafkaProducer, requestHandler.topic, requestHandler.codec, requestHandler.deliveryChan)
 
 	if produceError != nil {
 		http.Error(responseWriter, "internal error", http.StatusBadRequest)
@@ -44,10 +45,13 @@ func (requestHandler *RequestHandler) Handle(responseWriter http.ResponseWriter,
 	responseWriter.WriteHeader(http.StatusAccepted)
 }
 
-func produce(requestBodyAsJson structs.RequestBody, producer *kafka.Producer, topic string, deliveryChan chan kafka.Event) error {
-	key := []byte(requestBodyAsJson.Identifier)
-	value := new(bytes.Buffer)
-	json.NewEncoder(value).Encode(&requestBodyAsJson)
+func produce(requestBody structs.RequestBody, producer *kafka.Producer, topic string, codec *avro.Codec, deliveryChan chan kafka.Event) error {
+	key := []byte(requestBody.Identifier)
 
-	return infra.ProduceMessage(key, value.Bytes(), producer, topic, deliveryChan)
+	binary, err := codec.BinaryFromNative(nil, requestBody.ToMap())
+	if err != nil {
+		panic(err)
+	}
+
+	return infra.ProduceMessage(key, binary, producer, topic, deliveryChan)
 }

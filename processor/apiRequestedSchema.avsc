@@ -1,0 +1,9 @@
+{
+    "namespace": "apps",
+	"type":	"record",
+	"name": "apiRequested",
+	"fields": [
+	    { "name": "identifier", "type": "string", "doc": "request identifier"},
+		{ "name": "customer", "type": "string", "doc": "customer who requested"}
+	]
+}
