@@ -5,17 +5,17 @@ import (
 	"log"
 	"net/http"
 
-	avro "github.com/linkedin/goavro/v2"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/api/infra"
 	"github.com/emmanuelneri/microservices-orchestration/api/structs"
+	kafkaProducer "github.com/emmanuelneri/microservices-orchestration/commons/kafka"
+	avro "github.com/linkedin/goavro/v2"
 )
 
 // RequestHandler use to get db address for HTTP Handle method set
 type RequestHandler struct {
 	kafkaProducer *kafka.Producer
 	topic         string
-	codec 		  *avro.Codec
+	codec         *avro.Codec
 	deliveryChan  chan kafka.Event
 }
 
@@ -53,5 +53,5 @@ func produce(requestBody structs.RequestBody, producer *kafka.Producer, topic st
 		panic(err)
 	}
 
-	return infra.ProduceMessage(key, binary, producer, topic, deliveryChan)
+	return kafkaProducer.ProduceMessage(key, binary, producer, topic, deliveryChan)
 }

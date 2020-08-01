@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"commons/config"
+	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 

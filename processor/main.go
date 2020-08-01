@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/emmanuelneri/microservices-orchestration/commons/avro"
-	"github.com/emmanuelneri/microservices-orchestration/processor/infra"
+	kafkaConsumer "github.com/emmanuelneri/microservices-orchestration/commons/kafka"
 	"github.com/emmanuelneri/microservices-orchestration/processor/subscriber"
 	_ "github.com/linkedin/goavro/v2"
 )
@@ -15,7 +15,7 @@ const (
 
 func main() {
 	log.Print("Processor started")
-	processorConsumer := infra.CreateConsumer(consumerGroupName)
+	processorConsumer := kafkaConsumer.CreateConsumer(consumerGroupName)
 
 	codec, err := avro.LoadAvroCodec("apiRequestedSchema.avsc")
 	if err != nil {
