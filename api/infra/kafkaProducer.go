@@ -5,11 +5,11 @@ import (
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/commonsconfig"
+	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 )
 
 func CreateKafkaProducer() *kafka.Producer {
-	bootstrapServers := commonsconfig.KafkaBootstrapServersFromEnvOrDefault()
+	bootstrapServers := config.KafkaBootstrapServersFromEnvOrDefault()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
 	if err != nil {
 		log.Fatalf("Failed to create producer: %s\n", err)

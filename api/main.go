@@ -1,13 +1,13 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
 	"net/http"
 
-	"github.com/linkedin/goavro/v2"
 	"github.com/emmanuelneri/microservices-orchestration/api/handler"
 	"github.com/emmanuelneri/microservices-orchestration/api/infra"
+	"github.com/emmanuelneri/microservices-orchestration/commons/avro"
+	_ "github.com/linkedin/goavro/v2"
 )
 
 const (
@@ -18,12 +18,7 @@ func main() {
 	log.Print("API started")
 	producer := infra.CreateKafkaProducer()
 
-	schema, err := ioutil.ReadFile("apiRequestedSchema.avsc")
-	if err != nil {
-		panic(err)
-	}
-
-	codec, err := goavro.NewCodec(string(schema))
+	codec, err := avro.LoadAvroCodec("apiRequestedSchema.avsc")
 	if err != nil {
 		panic(err)
 	}

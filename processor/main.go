@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/linkedin/goavro/v2"
-	"io/ioutil"
 	"log"
 
-	"github.com/emmanuelneri/microservices-orchestration/processor/subscriber"
+	"github.com/emmanuelneri/microservices-orchestration/commons/avro"
 	"github.com/emmanuelneri/microservices-orchestration/processor/infra"
+	"github.com/emmanuelneri/microservices-orchestration/processor/subscriber"
+	_ "github.com/linkedin/goavro/v2"
 )
 
 const (
@@ -17,12 +17,7 @@ func main() {
 	log.Print("Processor started")
 	processorConsumer := infra.CreateConsumer(consumerGroupName)
 
-	schema, err := ioutil.ReadFile("apiRequestedSchema.avsc")
-	if err != nil {
-		panic(err)
-	}
-
-	codec, err := goavro.NewCodec(string(schema))
+	codec, err := avro.LoadAvroCodec("apiRequestedSchema.avsc")
 	if err != nil {
 		panic(err)
 	}
