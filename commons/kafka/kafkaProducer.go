@@ -1,14 +1,27 @@
-package infra
+package kafka
 
 import (
 	"fmt"
 	"log"
 
-	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/emmanuelneri/microservices-orchestration/commons/config"
+	"github.com/linkedin/goavro/v2"
 )
 
-func CreateKafkaProducer() *kafka.Producer {
+// Producer: encapsulate kafka producer and configurations to produce message
+type Producer struct {
+	kafkaProducer *kafka.Producer
+	topic         string
+	codec         *goavro.Codec
+	deliveryChan  chan kafka.Event
+}
+
+func CreateProducer(topic string, codec *goavro.Codec) *Producer {
+	return &Producer{kafkaProducer: createKafkaProducer(), topic: topic, codec: codec, deliveryChan: make(chan kafka.Event, 10000)}
+}
+
+func createKafkaProducer() *kafka.Producer {
 	bootstrapServers := config.KafkaBootstrapServersFromEnvOrDefault()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
 	if err != nil {
@@ -20,20 +33,29 @@ func CreateKafkaProducer() *kafka.Producer {
 	return producer
 }
 
-func ProduceMessage(key, value []byte, producer *kafka.Producer, topic string, deliveryChan chan kafka.Event) error {
-	produceError := producer.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Key:            key,
-		Value:          value,
-	}, deliveryChan)
-
-	if produceError != nil {
-		log.Panicln("error to produce: ", produceError)
+func (producer *Producer) Produce(key []byte, avroMessage AvroMessage) error {
+	binary, err := serialize(avroMessage, producer.codec)
+	if err != nil {
+		log.Panicln("serialize error: ", err)
 	}
 
-	logProduceMessage(deliveryChan)
+	err = producer.kafkaProducer.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &producer.topic, Partition: kafka.PartitionAny},
+		Key:            key,
+		Value:          binary,
+	}, producer.deliveryChan)
 
-	return produceError
+	if err != nil {
+		log.Panicln("produce error: ", err)
+	}
+
+	logProduceMessage(producer.deliveryChan)
+
+	return err
+}
+
+func serialize(avroMessage AvroMessage, codec *goavro.Codec) ([]byte, error) {
+	return codec.BinaryFromNative(nil, avroMessage.ToMap())
 }
 
 func logProduceMessage(deliveryChan chan kafka.Event) {
