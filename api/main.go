@@ -16,14 +16,13 @@ const (
 
 func main() {
 	log.Print("API started")
-	producer := kafkaProducer.CreateKafkaProducer()
-
 	codec, err := avro.LoadAvroCodec("apiRequestedSchema.avsc")
 	if err != nil {
 		panic(err)
 	}
 
-	requestHandler := handler.CreateRequestHandler(producer, topic, codec)
+	producer := kafkaProducer.CreateProducer(topic, codec)
+	requestHandler := handler.RequestHandler{Producer: producer}
 	http.HandleFunc("/", requestHandler.Handle)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

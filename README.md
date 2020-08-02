@@ -3,6 +3,15 @@
 
 ![alt tag](https://github.com/emmanuelneri/microservices-orchestration/blob/master/architecture.png?style=centerme)
 
+##### TODO
+- commons kafka
+- schema registry
+- requestId (HTTP response - Kafka Header)
+- project structure revision
+- dockerfile revision
+- migrate Ingress namespace
+- request/limits configuration revision
+
 ## Local deployment
 
 #### Requirements

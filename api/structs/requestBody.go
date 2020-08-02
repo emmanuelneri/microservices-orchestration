@@ -5,9 +5,9 @@ type RequestBody struct {
 	Customer   string
 }
 
-func (u *RequestBody) ToMap() map[string]interface{} {
+func (r RequestBody) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"identifier": string(u.Identifier),
-		"customer":  string(u.Customer),
+		"identifier": string(r.Identifier),
+		"customer":  string(r.Customer),
 	}
 }
