@@ -5,7 +5,7 @@ import (
 
 	"github.com/emmanuelneri/microservices-orchestration/commons/avro"
 	kafkaConsumer "github.com/emmanuelneri/microservices-orchestration/commons/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/processor/subscriber"
+	"github.com/emmanuelneri/microservices-orchestration/processor/processor"
 	_ "github.com/linkedin/goavro/v2"
 )
 
@@ -22,9 +22,7 @@ func main() {
 		panic(err)
 	}
 
-	go func() {
-		subscriber.ApiRequestedSubscriber(processorConsumer, codec)
-	}()
+	processor.ApiRequestedSubscriber(processorConsumer, codec)
 
 	select {}
 }
