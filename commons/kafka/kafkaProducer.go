@@ -33,8 +33,8 @@ func createKafkaProducer() *kafka.Producer {
 	return producer
 }
 
-func (producer *Producer) Produce(key []byte, avroMessage AvroMessage) error {
-	binary, err := serialize(avroMessage, producer.codec)
+func (producer *Producer) Produce(key []byte, value map[string]interface{}) error {
+	binary, err := serialize(value, producer.codec)
 	if err != nil {
 		log.Panicln("serialize error: ", err)
 	}
@@ -54,8 +54,8 @@ func (producer *Producer) Produce(key []byte, avroMessage AvroMessage) error {
 	return err
 }
 
-func serialize(avroMessage AvroMessage, codec *goavro.Codec) ([]byte, error) {
-	return codec.BinaryFromNative(nil, avroMessage.ToMap())
+func serialize(value map[string]interface{}, codec *goavro.Codec) ([]byte, error) {
+	return codec.BinaryFromNative(nil, value)
 }
 
 func logProduceMessage(deliveryChan chan kafka.Event) {
