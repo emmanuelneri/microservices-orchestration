@@ -6,7 +6,7 @@ const (
 	kafkaBootsrapServersKey   = "KAFKA_BOOTSTRAP_SERVERS"
 	defaultBootstrapServers   = "localhost:9092"
 	kafkaSchemaRegistryUrlKey = "KAFKA_SCHEMA_REGISTRY_URL"
-	defaultSchemaRegistryUrl  = "localhost:8081"
+	defaultSchemaRegistryUrl  = "http://localhost:8081"
 )
 
 func KafkaBootstrapServersFromEnvOrDefault() string {
