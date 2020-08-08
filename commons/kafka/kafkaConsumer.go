@@ -2,12 +2,12 @@ package kafka
 
 import (
 	"fmt"
+	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 	"github.com/linkedin/goavro/v2"
 	"log"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/emmanuelneri/microservices-orchestration/commons/config"
 )
 
 // Subscriber: encapsulate topic subscription
@@ -18,8 +18,18 @@ type Subscriber struct {
 	ConsumeChan   chan *ConsumedMessage
 }
 
-func CreateSubscriber(kafkaConsumer *kafka.Consumer, topic string, codec *goavro.Codec) *Subscriber {
-	return &Subscriber{kafkaConsumer: kafkaConsumer, topic: topic, codec: codec, ConsumeChan: make(chan *ConsumedMessage, 10000)}
+func CreateSubscriber(kafkaConsumer *kafka.Consumer, topic string) (*Subscriber, error) {
+	schemaRegistryUrl := config.SchemaRegistryUrlFromEnvOrDefault()
+	schema, err := geSchema(schemaRegistryUrl, topic)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Subscriber{kafkaConsumer: kafkaConsumer,
+			topic:       topic,
+			codec:       schema.Codec(),
+			ConsumeChan: make(chan *ConsumedMessage)},
+		err
 }
 
 type ConsumedMessage struct {
