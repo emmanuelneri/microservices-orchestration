@@ -17,20 +17,35 @@ type Producer struct {
 	deliveryChan  chan kafka.Event
 }
 
-func CreateProducer(topic string, codec *goavro.Codec) *Producer {
-	return &Producer{kafkaProducer: createKafkaProducer(), topic: topic, codec: codec, deliveryChan: make(chan kafka.Event, 10000)}
+func CreateProducer(topic, schemaFile string) (*Producer, error) {
+	schemaRegistryUrl := config.SchemaRegistryUrlFromEnvOrDefault()
+	schema, err := getOrCreateSchema(schemaRegistryUrl, topic, schemaFile)
+	if err != nil {
+		return nil, err
+	}
+
+	producer, err := createKafkaProducer()
+	if err != nil {
+		return nil, err
+	}
+
+	return &Producer{kafkaProducer: producer,
+			topic:        topic,
+			codec:        schema.Codec(),
+			deliveryChan: make(chan kafka.Event)},
+		err
 }
 
-func createKafkaProducer() *kafka.Producer {
+func createKafkaProducer() (*kafka.Producer, error) {
 	bootstrapServers := config.KafkaBootstrapServersFromEnvOrDefault()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": bootstrapServers})
 	if err != nil {
-		log.Fatalf("Failed to create producer: %s\n", err)
+		return nil, err
 	}
 
 	log.Print("Kafka Producer started. bootstrapServers: ", bootstrapServers)
 
-	return producer
+	return producer, nil
 }
 
 func (producer *Producer) Produce(key []byte, value map[string]interface{}) error {
