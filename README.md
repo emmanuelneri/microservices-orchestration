@@ -4,7 +4,6 @@
 ![alt tag](https://github.com/emmanuelneri/microservices-orchestration/blob/master/architecture.png?style=centerme)
 
 ##### TODO
-- schema registry
 - commons file segregation review
 - requestId (HTTP response - Kafka Header)
 - project structure revision
@@ -40,6 +39,10 @@
 -  Consume Kafka topic `kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic ApiRequested --from-beginning`
 -  List Kafka Consumer Group`kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --list`
 -  Describe Kafka Consumer Group`kubectl exec -c cp-kafka-broker -it confluent-oss-cp-kafka-0 -n kafka -- /bin/bash /usr/bin/kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group processor-consumer-group`
+
+#### Control center    
+- Expose external access `kubectl port-forward svc/confluent-oss-cp-control-center 9021:9021 -n kafka`
+- Access visual console `http://localhost:9021/`
 
 #### Stop all
 

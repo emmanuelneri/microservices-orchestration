@@ -1,8 +1,11 @@
 github.com/confluentinc/confluent-kafka-go v1.4.2 h1:13EK9RTujF7lVkvHQ5Hbu6bM+Yfrq8L0MkJNnjHSd4Q=
 github.com/confluentinc/confluent-kafka-go v1.4.2/go.mod h1:u2zNLny2xq+5rWeTQjFHbDzzNuba4P1vo31r9r4uAdg=
-github.com/emmanuelneri/microservices-orchestration v1.0.12 h1:sMgRh9tiTSLhIitH6A7yNkeKkq8udFlc2n0640MHaDE=
-github.com/emmanuelneri/microservices-orchestration v1.0.12/go.mod h1:mEqHZm/hcHpE/7u74ig9Vu6W/cXfTE6AXSjYpwihhlc=
+github.com/emmanuelneri/microservices-orchestration v1.0.17 h1:C//jADvh5rLRZTkWPQNLb8bvKZttT8w9ru47gDm3MHY=
+github.com/emmanuelneri/microservices-orchestration v1.0.17/go.mod h1:mEqHZm/hcHpE/7u74ig9Vu6W/cXfTE6AXSjYpwihhlc=
 github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+github.com/linkedin/goavro/v2 v2.9.7/go.mod h1:UgQUb2N/pmueQYH9bfqFioWxzYCZXSfF8Jw03O5sjqA=
 github.com/linkedin/goavro/v2 v2.9.8 h1:jN50elxBsGBDGVDEKqUlDuU1cFwJ11K/yrJCBMe/7Wg=
 github.com/linkedin/goavro/v2 v2.9.8/go.mod h1:UgQUb2N/pmueQYH9bfqFioWxzYCZXSfF8Jw03O5sjqA=
+github.com/riferrei/srclient v0.0.0-20200624225749-f45f25153cd7 h1:r7z//GhXlZ6v2RHa/aFp6mpFJPJWr17TqVAefSw+IAw=
+github.com/riferrei/srclient v0.0.0-20200624225749-f45f25153cd7/go.mod h1:i1oyvqwLivcqJfRt3KNsBcNftnveh7wWhuEvA3Zk2+g=
