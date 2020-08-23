@@ -7,6 +7,8 @@ const (
 	defaultBootstrapServers   = "localhost:9092"
 	kafkaSchemaRegistryUrlKey = "KAFKA_SCHEMA_REGISTRY_URL"
 	defaultSchemaRegistryUrl  = "http://localhost:8081"
+	syncProcessorAppKey       = "SYNC_PROCESSOR_URL"
+	syncProcessorAppUrl       = "http://localhost:9090"
 )
 
 func KafkaBootstrapServersFromEnvOrDefault() string {
@@ -15,6 +17,10 @@ func KafkaBootstrapServersFromEnvOrDefault() string {
 
 func SchemaRegistryUrlFromEnvOrDefault() string {
 	return getEnvOrDefault(kafkaSchemaRegistryUrlKey, defaultSchemaRegistryUrl)
+}
+
+func SyncProcessorAppUrlFromEnvOrDefault() string {
+	return getEnvOrDefault(syncProcessorAppKey, syncProcessorAppUrl)
 }
 
 func getEnvOrDefault(envKey, defaultValue string) string {
